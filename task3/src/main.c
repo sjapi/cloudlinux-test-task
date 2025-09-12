@@ -2,7 +2,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
-#include "task3.h"
+
+#include "utils.h"
 
 int main(int argc, char **argv)
 {

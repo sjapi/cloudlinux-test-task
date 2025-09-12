@@ -4,7 +4,8 @@ INCLUDE_DIR=./include/
 SRC_DIR=./src/
 OBJ_DIR=./obj/
 
-SRC=$(addprefix $(SRC_DIR), main.c validator.c execute.c)
+HDR=$(addprefix $(INCLUDE_DIR), utils.h)
+SRC=$(addprefix $(SRC_DIR), main.c validator.c execute.c utils.c)
 OBJ=$(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o ,$(SRC))
 
 CC=gcc
@@ -12,7 +13,7 @@ CFLAGS=-Wall -Wextra -Werror
 
 all: $(NAME)
 
-$(OBJ_DIR)%.o: $(SRC_DIR)%.c
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c $(HDR)
 	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -I $(INCLUDE_DIR) -o $@ -c $<
 

@@ -16,7 +16,7 @@ static void list_dir(const char *path, unsigned int indent)
 	DIR		*dir;
 	struct dirent	*entry;
 	char		*name;
-	char		full_path[1024];
+	char		full_path[PATH_MAX];
 
 	dir = opendir(path);
 	if (dir == NULL)
@@ -24,13 +24,13 @@ static void list_dir(const char *path, unsigned int indent)
 	while ((entry = readdir(dir)) != NULL)
 	{
 		name = entry->d_name;
-		if (name[0] == '.')
+		if (name != NULL && name[0] == '.')
 			continue;
 		print_tabs(indent);
 		printf("%s\n", name);
-		snprintf(full_path, sizeof(full_path), "%s/%s", path, name);
 		if (entry->d_type == DT_DIR)
 		{
+			snprintf(full_path, sizeof(full_path), "%s/%s", path, name);
 			list_dir(full_path, indent + 1);
 		}
 	}
