@@ -1,7 +1,19 @@
 #include <stdio.h>
+#include <sys/stat.h>
 #include <dirent.h>
 #include <string.h>
 #include <unistd.h>
+
+static int dir_exists(const char *path)
+{
+	struct stat sb;
+
+	if (stat(path, &sb) == 0 && S_ISDIR(sb.st_mode))
+	{
+		return 1;
+	}
+	return 0;
+}
 
 static void print_tabs(unsigned int indent)
 {
@@ -13,10 +25,10 @@ static void print_tabs(unsigned int indent)
 
 static void list_dir(const char *path, unsigned int indent)
 {
-	DIR		*dir;
+	DIR				*dir;
 	struct dirent	*entry;
-	char		*name;
-	char		full_path[PATH_MAX];
+	char			*name;
+	char			full_path[PATH_MAX];
 
 	dir = opendir(path);
 	if (dir == NULL)
@@ -40,19 +52,32 @@ static void list_dir(const char *path, unsigned int indent)
 int main(int argc, char **argv)
 {
 	char	cwd[PATH_MAX];
+	char	*target;
 
-	if (argc != 1)
+	if (argc == 1)
 	{
-		fprintf(stderr, "Error: extra aguments passed\n");
+		if (getcwd(cwd, sizeof(cwd)) == NULL)
+		{
+			fprintf(stderr, "Error: unable to get current working directory\n");
+			return 1;
+		}
+		target = cwd;
+	}
+	else if (argc == 2)
+	{
+		target = argv[1];
+		if (dir_exists(target) != 1)
+		{
+			fprintf(stderr, "Error: %s: no such directory\n", target);
+			return 1;
+		}
+	}
+	else
+	{
+		fprintf(stderr, "Error: extra arguments passed\n");
 		return 1;
 	}
-	if (getcwd(cwd, sizeof(cwd)) == NULL)
-	{
-		fprintf(stderr, "Error: unable to get current working directory\n");
-		return 1;
-	}
-	printf("%s\n", cwd);
-	list_dir(cwd, 1);
-	(void)argv;
+	printf("%s\n", target);
+	list_dir(target, 1);
 	return 0;
 }
