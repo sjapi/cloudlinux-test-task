@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <sys/wait.h>
 #include <fcntl.h>
+#include <signal.h>
 
 #include "utils.h"
 
@@ -16,6 +17,11 @@ static pid_t fork_and_exec(char *prog, int input_fd, int output_fd, int close_fd
 {
 	pid_t	pid;
 
+	if (prog_exists(prog) != 0)
+	{
+		fprintf(stderr, "Error: %s: prog not found\n", prog);
+		return -1;
+	}
 	pid = fork();
 	if (pid == 0)
 	{
