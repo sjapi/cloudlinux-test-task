@@ -54,6 +54,20 @@ $ cd .. && ./task2/list_dir
     README.md
 ```
 
+#### Bonus
+
+Added ability to specify path for listing directory
+
+```bash
+$ cd task2
+$ make
+$ ./list_dir ../tests/  # <- Specified path
+../tests/
+	test_task3.sh
+	test_task1.sh
+	test_task2.sh
+```
+
 ## Task 3: Command Pipeline Executor
 
 Executes: `prog1 && prog2 | prog3 > file`
@@ -67,7 +81,7 @@ Executes: `prog1 && prog2 | prog3 > file`
 ```bash
 $ cd task3
 $ make
-$ ./run_cmds /bin/true /bin/echo /usr/bin/wc output.txt
+$ ./run_cmds /bin/true /bin/echo /bin/wc output.txt
 $ cat output.txt 
       1       0       1
 ```
@@ -76,4 +90,36 @@ System calls used: `fork()`, `pipe()`, `dup2()`, `execl()`, `waitpid()`
 
 ---
 
-Task 1 and task 2 use `make` with standard targets: `all`, `clean`, `fclean`, `re`
+### Build
+
+Task 2 and task 3 use `Makefile` with standard targets: `all`, `clean`, `fclean`, `re`
+
+## Tests
+
+This folder contains **bonus** shell scripts to automatically test the programs from the tasks
+
+Each `.sh` file sets up a temporary sandbox, runs the corresponding program, and checks the results
+
+- `test_task1.sh` – tests the backup and cleanup scripts for C files  
+- `test_task2.sh` – tests the simple directory lister program  
+- `test_task3.sh` – tests the shell-like command runner program 
+
+```bash
+$ cd tests
+$ bash test_task1.sh 
+[INFO] Running backup_c_files.sh...
+[PASS] Found backup: src/main.c.orig
+[PASS] Found backup: src/util.c.orig
+[PASS] Not-C file not backed up
+[INFO] Running remove_backup_c_files.sh...
+[PASS] Backup deleted: src/main.c.orig
+[PASS] Backup deleted: src/util.c.orig
+✅ Taks 1 passed all tests
+$ bash test_task2.sh
+...
+✅ Task 2 passed all tests
+$ bash test_task3.sh
+...
+✅ Task 3 passed all tests
+```
+
