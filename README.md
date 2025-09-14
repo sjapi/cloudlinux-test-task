@@ -1,5 +1,12 @@
 # CloudLinux Test Task 
 
+My machine:
+
+```bash
+$ uname -a
+Linux sjapi 5.15.0-136-generic #147-Ubuntu SMP Sat Mar 15 15:53:30 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
+```
+
 ## Task 1: C File Backup Utility
 
 `backup_c_files.sh` - Creates backup copies of all `*.c` files with `.orig` extension
